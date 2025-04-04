@@ -29,20 +29,3 @@ docker run --rm -v $(pwd)/input:/data ghcr.io/geolonia/gt-tilebuild:latest
 ```
 
 実行後、`input/tiles` ディレクトリに `roads.mbtiles` が出力されます。
-
-
-### 開発者向け
-
-```bash
-$ docker build -t gt-tilebuild . //ビルド
-$ docker run --rm -v $(pwd)/.:/data gt-tilebuild // 実行
-```
-
-#### バージョン管理とデプロイ
-
-新しいバージョンをリリースするには：
-
-```bash
-git tag v1.2.0
-git push origin v1.2.0
-```
