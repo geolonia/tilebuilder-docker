@@ -36,5 +36,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/gt-tilebuild:${{ steps.version.outputs.version }}
-            ghcr.io/${{ github.repository_owner }}/gt-tilebuild:latest
+            ghcr.io/${{ github.repository_owner }}/tilebuilder:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/tilebuilder:latest
