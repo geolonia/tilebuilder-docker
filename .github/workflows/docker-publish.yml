@@ -1,0 +1,40 @@
+name: Build and Push Docker image to GHCR
+
+on:
+  push:
+    tags:
+      - 'v*'  # v1.0.0 などのタグが push されたときにトリガー
+
+jobs:
+  build-and-push:
+    name: Build & Push Docker image
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/gt-tilebuild:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/gt-tilebuild:latest
