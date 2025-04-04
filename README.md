@@ -1,4 +1,4 @@
-# tilebuild-docker
+# tilebuilder-docker
 
 - Shapeファイル を Tippecanoe を使って `.mbtiles` に変換する Docker 環境です。  
 - ファイルが配置されているディレクトリを指定して、Docker を実行すると MBTiles が作成されます。
@@ -7,16 +7,15 @@
 
 以下を実行して Docker コンテナを pull して下さい。（初回のみ）
 ```bash
-docker pull ghcr.io/geolonia/gt-tilebuild:latest
+docker pull ghcr.io/geolonia/tilebuilder:latest
 ```
 
 #### タイルの作成
 Shapeファイルがあるディレクトリ`<YOUR-DIR>`を指定して、以下のコマンドを実行すると `<YOUR-DIR>/tiles` に MBTiles が作成されます。
 
 ```bash
-docker run --rm -v <YOUR-DIR>:/data ghcr.io/geolonia/gt-tilebuild:latest
+docker run --rm -v <YOUR-DIR>:/data ghcr.io/geolonia/tilebuilder:latest
 ```
-
 
 #### 実行例
 
@@ -26,7 +25,7 @@ cp ./roads.shp input/
 cp ./roads.shx input/
 cp ./roads.dbf input/
 
-docker run --rm -v ./input:/data ghcr.io/geolonia/gt-tilebuild:latest
+docker run --rm -v ./input:/data ghcr.io/geolonia/tilebuilder:latest
 ```
 
 実行後、`input/tiles` ディレクトリに `roads.mbtiles` が出力されます。
