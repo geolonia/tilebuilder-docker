@@ -26,7 +26,7 @@ cp ./roads.shp input/
 cp ./roads.shx input/
 cp ./roads.dbf input/
 
-docker run --rm -v $(pwd)/input:/data ghcr.io/geolonia/gt-tilebuild:latest
+docker run --rm -v ./input:/data ghcr.io/geolonia/gt-tilebuild:latest
 ```
 
 実行後、`input/tiles` ディレクトリに `roads.mbtiles` が出力されます。
