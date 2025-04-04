@@ -5,7 +5,7 @@
 
 ### 使い方
 
-以下を実行して Docker コンテナを pull して下さい。
+以下を実行して Docker コンテナを pull して下さい。（初回のみ）
 ```bash
 docker pull ghcr.io/geolonia/gt-tilebuild:latest
 ```
