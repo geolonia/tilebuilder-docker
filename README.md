@@ -1,4 +1,4 @@
-# gt-tilebuild
+# tilebuild-docker
 
 - Shapeファイル を Tippecanoe を使って `.mbtiles` に変換する Docker 環境です。  
 - ファイルが配置されているディレクトリを指定して、Docker を実行すると MBTiles が作成されます。
