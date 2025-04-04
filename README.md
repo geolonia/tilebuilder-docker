@@ -14,7 +14,7 @@ docker pull ghcr.io/geolonia/gt-tilebuild:latest
 Shapeファイルがあるディレクトリ`<YOUR-DIR>`を指定して、以下のコマンドを実行すると `<YOUR-DIR>/tiles` に MBTiles が作成されます。
 
 ```bash
-docker run --rm -v $(pwd)/<YOUR-DIR>:/data ghcr.io/geolonia/gt-tilebuild:latest
+docker run --rm -v <YOUR-DIR>:/data ghcr.io/geolonia/gt-tilebuild:latest
 ```
 
 
