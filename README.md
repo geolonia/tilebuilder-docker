@@ -5,27 +5,30 @@
 
 ### 使い方
 
-以下を実行して Docker コンテナを pull して下さい。（初回のみ）
-```bash
-docker pull ghcr.io/geolonia/tilebuilder:latest
-```
+下記のテンプレートを使用して下さい。
+- https://github.com/geolonia/tilebuilder/
 
-#### タイルの作成
-Shapeファイルがあるディレクトリ`<YOUR-DIR>`を指定して、以下のコマンドを実行すると `<YOUR-DIR>/tiles` に MBTiles が作成されます。
+### 開発者向け
 
-```bash
-docker run --rm -v <YOUR-DIR>:/data ghcr.io/geolonia/tilebuilder:latest
-```
-
-#### 実行例
+#### ビルド
 
 ```bash
-mkdir input
-cp ./roads.shp input/
-cp ./roads.shx input/
-cp ./roads.dbf input/
-
-docker run --rm -v ./input:/data ghcr.io/geolonia/tilebuilder:latest
+$ docker build -t tilebuilder .
 ```
 
-実行後、`input/tiles` ディレクトリに `roads.mbtiles` が出力されます。
+#### 実行
+
+```bash
+$ docker run --rm -v $(pwd)/data:/data tilebuilder
+```
+
+## バージョン管理とデプロイ
+
+新しいバージョンをリリースするには：
+
+```bash
+git tag v1.2.0
+git push origin v1.2.0
+```
+
+GitHub Actions により、`ghcr.io/geolonia/tilebuilder:v1.2.0` と `:latest` タグが自動的に push されます。
