@@ -18,4 +18,12 @@ unzip_recursively() {
     done
 }
 
-unzip_recursively .
+# 引数が指定されていない場合はエラーを表示して終了
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <target_dir>"
+    exit 1
+fi
+
+# 引数で渡されたディレクトリを使用
+target_dir=$1
+unzip_recursively "$target_dir"

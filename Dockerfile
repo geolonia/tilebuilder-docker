@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     npm \
     nkf \
     jq \
+    unzip \
   && rm -rf /var/lib/apt/lists/*
 
 # Tippecanoe のインストール
@@ -31,6 +32,6 @@ WORKDIR /data
 
 # scripts ディレクトリごとコピー
 COPY scripts /usr/local/bin/
-RUN chmod +x /usr/local/bin/build_tile.sh
+RUN chmod +x /usr/local/bin/*.sh
 
 CMD ["build_tile.sh", "/data"]

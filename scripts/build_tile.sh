@@ -5,11 +5,12 @@ PRJ_CONTENT='GEOGCS["GCS_JGD_2000",DATUM["D_JGD_2000",SPHEROID["GRS_1980",637813
 
 # デフォルトディレクトリ
 TARGET_DIR="/data"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Processing directory: $TARGET_DIR"
 
 # Zipファイルを解凍
-./unzip.sh
+. "$SCRIPT_DIR/unzip.sh" "$TARGET_DIR"
 
 find "$TARGET_DIR" -iname "*.shp" | while read -r shpfile; do
     echo "Processing: $shpfile"
