@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     npm \
     nkf \
     jq \
+    unzip \
   && rm -rf /var/lib/apt/lists/*
 
 # Tippecanoe のインストール
@@ -28,7 +29,10 @@ RUN curl -L https://github.com/felt/tippecanoe/archive/refs/tags/${TIPPECANOE_VE
 
 # 実行スクリプトをコピー
 WORKDIR /data
-COPY run.sh /usr/local/bin/run-tilegen.sh
-RUN chmod +x /usr/local/bin/run-tilegen.sh
 
-CMD ["run-tilegen.sh", "/data"]
+# scripts ディレクトリごとコピー
+COPY scripts /usr/local/bin/
+RUN chmod +x /usr/local/bin/*.sh
+
+
+CMD ["build_tile.sh", "/data"]
