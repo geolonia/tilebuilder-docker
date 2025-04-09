@@ -28,7 +28,9 @@ RUN curl -L https://github.com/felt/tippecanoe/archive/refs/tags/${TIPPECANOE_VE
 
 # 実行スクリプトをコピー
 WORKDIR /data
-COPY run.sh /usr/local/bin/run-tilegen.sh
-RUN chmod +x /usr/local/bin/run-tilegen.sh
 
-CMD ["run-tilegen.sh", "/data"]
+# scripts ディレクトリごとコピー
+COPY scripts /usr/local/bin/
+RUN chmod +x /usr/local/bin/build_tile.sh
+
+CMD ["build_tile.sh", "/data"]

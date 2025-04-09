@@ -8,6 +8,9 @@ TARGET_DIR="/data"
 
 echo "Processing directory: $TARGET_DIR"
 
+# Zipファイルを解凍
+./unzip.sh
+
 find "$TARGET_DIR" -iname "*.shp" | while read -r shpfile; do
     echo "Processing: $shpfile"
 
