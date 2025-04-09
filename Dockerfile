@@ -34,4 +34,5 @@ WORKDIR /data
 COPY scripts /usr/local/bin/
 RUN chmod +x /usr/local/bin/*.sh
 
+
 CMD ["build_tile.sh", "/data"]

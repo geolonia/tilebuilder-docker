@@ -1,7 +1,6 @@
 # tilebuilder-docker
 
 - Shapeファイル を Tippecanoe を使って `.mbtiles` に変換する Docker 環境です。  
-- ファイルが配置されているディレクトリを指定して、Docker を実行すると MBTiles が作成されます。
 
 ### 使い方
 
@@ -18,8 +17,10 @@ $ docker build -t tilebuilder .
 
 #### 実行
 
+- カレントディレクトリ以下にある Shapeファイルを MBTiles に変換します。
+
 ```bash
-$ docker run --rm -v $(pwd)/data:/data tilebuilder
+$ docker run --rm -v $(pwd):/data tilebuilder
 ```
 
 ## バージョン管理とデプロイ
