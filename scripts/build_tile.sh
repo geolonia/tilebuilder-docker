@@ -1,36 +1,24 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
-# デフォルトディレクトリ
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TARGET_DIR="/data"
-OUTPUT_DIR="/data/tiles"
-# OUTPUT_DIR が存在しない場合は作成
-if [ ! -d "$OUTPUT_DIR" ]; then
-    mkdir -p "$OUTPUT_DIR"
-fi
+CONFIG_FILE="kata.yml"
 
-echo "Processing directory: $TARGET_DIR"
+# レイヤー名 = source-layer として取得
+source_layers=$(yq e 'keys | .[]' "$CONFIG_FILE")
 
-# Zipファイルを解凍
-. "$SCRIPT_DIR/unzip.sh" "$TARGET_DIR"
+for source_layer in $source_layers; do
+  echo "==== Source Layer: $source_layer ===="
 
+  source=$(yq e ".\"$source_layer\".source" "$CONFIG_FILE")
+  minzoom=$(yq e ".\"$source_layer\".minzoom" "$CONFIG_FILE")
+  maxzoom=$(yq e ".\"$source_layer\".maxzoom" "$CONFIG_FILE")
 
-find "$TARGET_DIR" -iname "*.shp" | while read -r shpfile; do
-    echo "Processing: $shpfile"
+  echo "Source: $source"
+  echo "MinZoom: $minzoom"
+  echo "MaxZoom: $maxzoom"
 
-    base=$(basename "$shpfile" .shp)
-
-    tmp_ndjson="/tmp/${base}.ndjson"
-    mbtiles_file="${OUTPUT_DIR}/${base}.mbtiles"
-
-    echo "Converting .shp to .ndjson with ogr2ogr (GeoJSONSeq)..."
-    ogr2ogr -f GeoJSONSeq -t_srs EPSG:4326 "$tmp_ndjson" "$shpfile"
-
-    echo "Generating MBTiles with Tippecanoe..."
-    tippecanoe -o "$mbtiles_file" "$tmp_ndjson"
-
-    rm -f "$tmp_ndjson"
-
-    echo "Finished: $mbtiles_file"
+  echo "Properties:"
+  yq e ".\"$source_layer\".properties" "$CONFIG_FILE"
+  echo ""
 done

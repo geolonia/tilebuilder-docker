@@ -17,7 +17,10 @@ RUN apt-get update && apt-get install -y \
     nkf \
     jq \
     unzip \
-  && rm -rf /var/lib/apt/lists/*
+    && curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
+    -o /usr/local/bin/yq \
+    && chmod +x /usr/local/bin/yq \
+    && rm -rf /var/lib/apt/lists/*
 
 # Tippecanoe のインストール
 RUN curl -L https://github.com/felt/tippecanoe/archive/refs/tags/${TIPPECANOE_VERSION}.tar.gz -o tippecanoe.tar.gz && \
