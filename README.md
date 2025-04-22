@@ -1,6 +1,6 @@
 # tilebuilder-docker
 
-- Shapeファイル を Tippecanoe を使って `.mbtiles` に変換する Docker 環境です。  
+- Shapeファイル を Tippecanoe を使って MBTiles（Mapbox Vector Tile形式） に変換する Docker 環境です。  
 
 ### 使い方
 
