@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_FILE="kata.yml"
 
-# レイヤー名 = source-layer として取得
+# 出力ディレクトリ設定
+OUTPUT_DIR="/data/tiles"
+mkdir -p "$OUTPUT_DIR"
+
+# source-layer をループ
 source_layers=$(yq e 'keys | .[]' "$CONFIG_FILE")
 
 for source_layer in $source_layers; do
@@ -18,7 +21,22 @@ for source_layer in $source_layers; do
   echo "MinZoom: $minzoom"
   echo "MaxZoom: $maxzoom"
 
-  echo "Properties:"
-  yq e ".\"$source_layer\".properties" "$CONFIG_FILE"
+  # Shapefile名から中間ファイルパスを生成
+  base=$(basename "$source" .shp)
+  tmp_ndjson="/tmp/${base}.ndjson"
+  mbtiles_file="${OUTPUT_DIR}/${base}.mbtiles"
+
+  echo "Converting .shp to .ndjson with ogr2ogr (GeoJSONSeq)..."
+  ogr2ogr -f GeoJSONSeq -t_srs EPSG:4326 "$tmp_ndjson" "$source"
+
+  echo "Generating MBTiles with Tippecanoe..."
+  tippecanoe \
+    -o "$mbtiles_file" \
+    -l "$source_layer" \
+    -z "$maxzoom" -Z "$minzoom" \
+    "$tmp_ndjson"
+
+  rm -f "$tmp_ndjson"
+  echo "Finished: $mbtiles_file"
   echo ""
 done
