@@ -1,36 +1,56 @@
 #!/usr/bin/env bash
 set -ex
 
-# デフォルトディレクトリ
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TARGET_DIR="/data"
+CONFIG_FILE="kata.yml"
 OUTPUT_DIR="/data/tiles"
-# OUTPUT_DIR が存在しない場合は作成
-if [ ! -d "$OUTPUT_DIR" ]; then
-    mkdir -p "$OUTPUT_DIR"
-fi
+mkdir -p "$OUTPUT_DIR"
 
-echo "Processing directory: $TARGET_DIR"
+# 全体 default 設定を取得
+default_cpg=$(yq e '.default.cpg // "UTF-8"' "$CONFIG_FILE")
+default_prj=$(yq e '.default.prj // "EPSG:4326"' "$CONFIG_FILE") # 入力側の指定に使う
 
-# Zipファイルを解凍
-. "$SCRIPT_DIR/unzip.sh" "$TARGET_DIR"
+# default を除いたレイヤー一覧
+source_layers=$(yq e 'keys | .[]' "$CONFIG_FILE" | grep -v '^default$')
 
+for source_layer in $source_layers; do
+  echo "==== Source Layer: $source_layer ===="
 
-find "$TARGET_DIR" -iname "*.shp" | while read -r shpfile; do
-    echo "Processing: $shpfile"
+  minzoom=$(yq e ".\"$source_layer\".minzoom" "$CONFIG_FILE")
+  maxzoom=$(yq e ".\"$source_layer\".maxzoom" "$CONFIG_FILE")
+  sources_length=$(yq e ".\"$source_layer\".sources | length" "$CONFIG_FILE")
 
-    base=$(basename "$shpfile" .shp)
+  # 一時 .ndjson リスト
+  tmp_ndjson_list=()
 
-    tmp_ndjson="/tmp/${base}.ndjson"
-    mbtiles_file="${OUTPUT_DIR}/${base}.mbtiles"
+  for i in $(seq 0 $((sources_length - 1))); do
+    source=$(yq e ".\"$source_layer\".sources[$i]" "$CONFIG_FILE")
+    base=$(basename "$source" .shp)
+    dir=$(dirname "$source")
 
-    echo "Converting .shp to .ndjson with ogr2ogr (GeoJSONSeq)..."
-    ogr2ogr -f GeoJSONSeq -t_srs EPSG:4326 "$tmp_ndjson" "$shpfile"
+    tmp_ndjson="/tmp/${source_layer}_${i}_${base}.ndjson"
 
-    echo "Generating MBTiles with Tippecanoe..."
-    tippecanoe -o "$mbtiles_file" "$tmp_ndjson"
+    echo "  Source: $source"
+    echo "  → Converting to GeoJSONSeq: $tmp_ndjson"
+    ogr2ogr -f GeoJSONSeq -s_srs "$default_prj" -t_srs "EPSG:4326" \
+      --config SHAPE_ENCODING "$default_cpg" \
+      "$tmp_ndjson" "$source"
 
-    rm -f "$tmp_ndjson"
+    tmp_ndjson_list+=("$tmp_ndjson")
+  done
 
-    echo "Finished: $mbtiles_file"
+  # 出力ファイル名はレイヤ名
+  mbtiles_file="${OUTPUT_DIR}/${source_layer}.mbtiles"
+  echo "Generating MBTiles: $mbtiles_file"
+
+  tippecanoe \
+    -o "$mbtiles_file" \
+    -l "$source_layer" \
+    -z "$maxzoom" -Z "$minzoom" \
+    --drop-densest-as-needed \
+    "${tmp_ndjson_list[@]}"
+
+  # クリーンアップ
+  rm -f "${tmp_ndjson_list[@]}"
+  echo "Finished: $mbtiles_file"
+  echo ""
 done
