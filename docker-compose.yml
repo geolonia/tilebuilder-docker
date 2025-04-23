@@ -1,0 +1,15 @@
+# docker-compose.yml
+version: '3.8'
+services:
+  tilebuilder:
+    image: ghcr.io/geolonia/tilebuilder:latest
+    volumes:
+      - ./data:/data
+
+  tileserver:
+    image: maptiler/tileserver-gl:latest
+    volumes:
+      - ./data:/data
+    ports:
+      - '8080:8080'
+    command: --file tiles/all.mbtiles
