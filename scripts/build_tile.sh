@@ -48,6 +48,8 @@ for source_layer in $source_layers; do
   mbtiles_file="${OUTPUT_DIR}/${source_layer}.mbtiles"
   echo "Generating MBTiles: $mbtiles_file"
 
+  echo $tmp_ndjson_list
+
   tippecanoe \
     -o "$mbtiles_file" \
     -l "$source_layer" \
