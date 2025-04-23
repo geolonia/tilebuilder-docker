@@ -65,9 +65,9 @@ for source_layer in $source_layers; do
   )
 
   IFS=$'\n' #スペースを含むファイル名に対応
-  mbtiles_files=($(find . -name "*.mbtiles" ! -name "output.mbtiles"))
+  mbtiles_files=($(find . -name "*.mbtiles" ! -name "all.mbtiles"))
   echo "マージする .mbtiles ファイル: ${mbtiles_files[@]}"
-  merged_file="${OUTPUT_DIR}/output.mbtiles"
+  merged_file="${OUTPUT_DIR}/all.mbtiles"
   tile-join -o "$merged_file" "${TILEJOIN_OPTS[@]}" "${mbtiles_files[@]}"
 
   # クリーンアップ
