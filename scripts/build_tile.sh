@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-CONFIG_FILE="kata.yml"
+CONFIG_FILE="/data/kata.yml"
 OUTPUT_DIR="/data/tiles"
 mkdir -p "$OUTPUT_DIR"
 
@@ -23,13 +23,13 @@ for source_layer in $source_layers; do
 
   minzoom=$(yq e ".\"$source_layer\".minzoom" "$CONFIG_FILE")
   maxzoom=$(yq e ".\"$source_layer\".maxzoom" "$CONFIG_FILE")
-  sources_length=$(yq e ".\"$source_layer\".sources | length" "$CONFIG_FILE")
+  sources_length=$(yq e ".\"$source_layer\".source | length" "$CONFIG_FILE")
 
   # 一時 .ndjson リスト
   tmp_ndjson_list=()
 
   for i in $(seq 0 $((sources_length - 1))); do
-    source=$(yq e ".\"$source_layer\".sources[$i]" "$CONFIG_FILE")
+    source=$(yq e ".\"$source_layer\".source[$i]" "$CONFIG_FILE")
     base=$(basename "$source" .shp)
     dir=$(dirname "$source")
 
