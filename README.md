@@ -32,4 +32,4 @@ git tag v1.2.0
 git push origin v1.2.0
 ```
 
-GitHub Actions により、`ghcr.io/geolonia/tilebuilder:v1.2.0` と `:latest` タグが自動的に push されます。
+GitHub Actions により、`ghcr.io/geolonia/tilebuilder:1.2.0` と `:latest` タグが自動的に push されます。
