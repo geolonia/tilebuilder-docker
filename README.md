@@ -20,7 +20,7 @@ $ docker build -t tilebuilder .
 - カレントディレクトリ以下にある Shapeファイルを MBTiles に変換します。
 
 ```bash
-$ docker run --rm -v $(pwd):/data tilebuilder
+$ docker run --rm -v $(pwd)/data:/data tilebuilder
 ```
 
 ## バージョン管理とデプロイ
