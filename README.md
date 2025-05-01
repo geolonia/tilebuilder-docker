@@ -9,18 +9,29 @@
 
 ### 開発者向け
 
-#### ビルド
+#### 環境構築
+- Docker Desktop をインストールしておいてください。
 
 ```bash
-$ docker build -t tilebuilder .
+$ git clone git@github.com:geolonia/tilebuilder-docker.git
+$ cd tilebuilder-docker
+$ npm install
+```
+
+#### ビルド
+
+- Dockerfile をビルドします。
+
+```bash
+$ npm run build
 ```
 
 #### 実行
 
-- カレントディレクトリ以下にある Shapeファイルを MBTiles に変換します。
+- `./data` 以下にある Shapeファイルを MBTiles に変換します。
 
 ```bash
-$ docker run --rm -v $(pwd)/data:/data tilebuilder
+$ npm run create:mbtiles
 ```
 
 ## バージョン管理とデプロイ

@@ -1,0 +1,23 @@
+{
+  "name": "tilebuilder-docker",
+  "version": "1.0.0",
+  "description": "- Shapeファイル を Tippecanoe を使って MBTiles（Mapbox Vector Tile形式） に変換する Docker 環境です。",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "docker build -t tilebuilder-docker .",
+    "create:mbtiles": "docker run --rm -v $(pwd)/data:/data tilebuilder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geolonia/tilebuilder-docker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/geolonia/tilebuilder-docker/issues"
+  },
+  "homepage": "https://github.com/geolonia/tilebuilder-docker#readme"
+}

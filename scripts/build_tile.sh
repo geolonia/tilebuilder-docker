@@ -56,7 +56,7 @@ generate_layer() {
   tippecanoe \
     -o "$mbtiles_file" \
     -l "$source_layer" \
-    -z "$maxzoom" -Z "$minzoom" \
+    -Z "$minzoom" -z "$maxzoom" \
     --drop-densest-as-needed \
     "${tmp_ndjson_list[@]}"
 

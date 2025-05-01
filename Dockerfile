@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     nkf \
     jq \
     unzip \
+    dstat \
     && curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
     -o /usr/local/bin/yq \
     && chmod +x /usr/local/bin/yq \
