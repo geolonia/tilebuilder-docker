@@ -1,5 +1,5 @@
 data/
-_data/
 tiles/
+_*
 deploy_to_ec2.sh
-*.pem
+.envrc
