@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "docker build -t tilebuilder-docker .",
+    "build": "docker build -t tilebuilder .",
     "create:mbtiles": "docker run --rm -v $(pwd)/data:/data tilebuilder"
   },
   "repository": {
