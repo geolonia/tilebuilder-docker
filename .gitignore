@@ -3,3 +3,4 @@ tiles/
 _*
 deploy_to_ec2.sh
 .envrc
+*.zip
