@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-CONFIG_FILE="/data/kata.yml"
-OUTPUT_DIR="/data/tiles"
+echo "Script started at: $(date)"
+
+CONFIG_FILE="$1/kata.yml"
+OUTPUT_DIR="$1/tiles"
+TMPDIR="$1/tmp"
 mkdir -p "$OUTPUT_DIR"
+mkdir -p "$TMPDIR"
 
 MAX_JOBS=$(nproc)
 echo "MAX_JOBS: $MAX_JOBS"
@@ -42,7 +46,7 @@ generate_layer() {
   for i in $(seq 0 $((sources_length - 1))); do
     local source=$(yq e ".\"$source_layer\".source[$i]" "$CONFIG_FILE")
     local base=$(basename "$source" .shp)
-    local tmp_ndjson="/tmp/${source_layer}_${i}_${base}.ndjson"
+    local tmp_ndjson="${TMPDIR}/${source_layer}_${i}_${base}.ndjson"
     echo "  Source: $source → $tmp_ndjson"
 
     ogr2ogr -f GeoJSONSeq \
@@ -54,17 +58,21 @@ generate_layer() {
   done
 
   echo "  → tippecanoe generating $mbtiles_file"
+  
+  # 大量のデータを扱う場合、容量の大きいストレージを --temporary-directory= で指定することでストレージ不足エラーを回避する
   tippecanoe \
     -o "$mbtiles_file" \
     -l "$source_layer" \
     -Z "$minzoom" -z "$maxzoom" \
     --drop-densest-as-needed \
+    --temporary-directory="$TMPDIR" \
     "${tmp_ndjson_list[@]}"
+    
 
   # Stop timer and report layer creation time
   local end_time_layer=$(date +%s)
   local elapsed_layer=$((end_time_layer - start_time_layer))
-  echo "  → Layer creation time (ogr2ogr→tile): $((elapsed_layer/60))m $((elapsed_layer%60))s"
+  echo "  → Each MBTiles creation time (shape→mbtiles): $((elapsed_layer/60))m $((elapsed_layer%60))s"
 
   # Report tile size
   local tile_size=$(du -h "$mbtiles_file" | cut -f1)
@@ -84,7 +92,7 @@ done
 wait
 
 # Merge all tiles
-echo "=== Merging all .mbtiles ==="
+echo "=== Merging all.mbtiles ==="
 start_time_merge=$(date +%s)
 
 tile-join \
@@ -108,6 +116,8 @@ elapsed_all=$((end_time_all - start_time_all))
 echo "All tiles generated and merged at ${OUTPUT_DIR}/all.mbtiles"
 echo "===> Total time: $((elapsed_all/60))m $((elapsed_all%60))s"
 
-# 最終的なディスク使用量
-echo "Disk usage of output directory:"
-du -sh "$OUTPUT_DIR"
+# Cleanup temporary files
+echo "Cleaning up temporary files..."
+rm -rf "$TMPDIR"
+
+echo "Script finished at: $(date)"
