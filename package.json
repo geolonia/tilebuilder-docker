@@ -1,6 +1,6 @@
 {
   "name": "tilebuilder-docker",
-  "version": "1.0.1",
+  "version": "v0.1.4",
   "description": "- Shapeファイル を Tippecanoe を使って MBTiles（Mapbox Vector Tile形式） に変換する Docker 環境です。",
   "main": "index.js",
   "directories": {
