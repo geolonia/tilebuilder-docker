@@ -1,6 +1,10 @@
 data/
 tiles/
+result_tiles/
 _*
 deploy_to_ec2.sh
+deploy-mbtiles.sh
+generate-style.sh
+style.json
 .envrc
 *.zip
