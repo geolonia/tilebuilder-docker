@@ -1,7 +1,8 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
+# FROM ghcr.io/osgeo/gdal:ubuntu-full-3.11.3
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TIPPECANOE_VERSION=2.66.0
+ENV TIPPECANOE_VERSION=2.78.0
 
 # 必要パッケージのインストール
 RUN apt-get update && apt-get install -y \
@@ -26,7 +27,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -L https://github.com/felt/tippecanoe/archive/refs/tags/${TIPPECANOE_VERSION}.tar.gz -o tippecanoe.tar.gz && \
     tar -xzf tippecanoe.tar.gz && \
     cd tippecanoe-${TIPPECANOE_VERSION} && \
-    make -j && \
+    make -j$(nproc) && \
     make install && \
     cd .. && rm -rf tippecanoe*
 
