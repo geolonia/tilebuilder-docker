@@ -1,7 +1,7 @@
 FROM ubuntu:24.04
 # FROM ghcr.io/osgeo/gdal:ubuntu-full-3.11.3
 
-ARG TARGETARCH=amd64
+ARG TARGETARCH
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TIPPECANOE_VERSION=2.78.0
