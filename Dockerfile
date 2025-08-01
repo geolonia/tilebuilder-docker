@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y \
     nkf \
     jq \
     unzip \
-    && echo "TARGETARCH=${TARGETARCH}" \
     && curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${TARGETARCH} \
     -o /usr/local/bin/yq \
     && chmod +x /usr/local/bin/yq \
