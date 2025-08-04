@@ -6,6 +6,8 @@ echo "Script started at: $(date)"
 CONFIG_FILE="$1/kata.yml"
 OUTPUT_DIR="$1/tiles"
 TMPDIR="$1/tmp"
+MERGE_TARGETS="$2"
+
 mkdir -p "$OUTPUT_DIR"
 mkdir -p "$TMPDIR"
 
@@ -91,24 +93,26 @@ for source_layer in "${source_layers[@]}"; do
 done
 wait
 
-# Merge all tiles
-echo "=== Merging all.mbtiles ==="
-start_time_merge=$(date +%s)
+if [[ -n "$MERGE_TARGETS" ]]; then
+  # Merge all tiles
+  echo "=== Merging all.mbtiles ==="
+  start_time_merge=$(date +%s)
 
-tile-join \
-  -o "${OUTPUT_DIR}/all.mbtiles" \
-  --overzoom --no-tile-size-limit \
-  -Z "$merge_minzoom" -z "$merge_maxzoom" --force \
-  $(find "$OUTPUT_DIR" -name "*.mbtiles" ! -name "all.mbtiles")
+  tile-join \
+    -o "${OUTPUT_DIR}/all.mbtiles" \
+    --overzoom --no-tile-size-limit \
+    -Z "$merge_minzoom" -z "$merge_maxzoom" --force \
+    $(find "$OUTPUT_DIR" -name "*.mbtiles" ! -name "all.mbtiles")
 
-# Stop merge timer and report
-end_time_merge=$(date +%s)
-elapsed_merge=$((end_time_merge - start_time_merge))
-echo "  → Merge time: $((elapsed_merge/60))m $((elapsed_merge%60))s"
+  # Stop merge timer and report
+  end_time_merge=$(date +%s)
+  elapsed_merge=$((end_time_merge - start_time_merge))
+  echo "  → Merge time: $((elapsed_merge/60))m $((elapsed_merge%60))s"
 
-# Report merged file size
-merged_size=$(du -h "${OUTPUT_DIR}/all.mbtiles" | cut -f1)
-echo "  → Size of merged file: $merged_size"
+  # Report merged file size
+  merged_size=$(du -h "${OUTPUT_DIR}/all.mbtiles" | cut -f1)
+  echo "  → Size of merged file: $merged_size"
+fi
 
 # 全体処理終了／時間報告
 end_time_all=$(date +%s)
