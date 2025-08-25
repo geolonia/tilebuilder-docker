@@ -104,7 +104,7 @@ merge_tile_layers() {
     -o "${OUTPUT_DIR}/$target_tile.mbtiles" \
     --overzoom --no-tile-size-limit \
     --force \
-    $(find "$OUTPUT_DIR" -name "*.mbtiles" ! -name "$target_tile.mbtiles")
+    $(find "$OUTPUT_DIR/$target_tile/" -name "*.mbtiles")
 
   # Stop merge timer and report
   end_time_merge=$(date +%s)
