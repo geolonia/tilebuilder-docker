@@ -1,6 +1,8 @@
 FROM ubuntu:24.04
 # FROM ghcr.io/osgeo/gdal:ubuntu-full-3.11.3
 
+ARG TARGETARCH
+
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TIPPECANOE_VERSION=2.78.0
 
@@ -18,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     nkf \
     jq \
     unzip \
-    && curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_arm64 \
+    && curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${TARGETARCH} \
     -o /usr/local/bin/yq \
     && chmod +x /usr/local/bin/yq \
     && rm -rf /var/lib/apt/lists/*
